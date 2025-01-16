@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ lib, config, pkgs, pkgs-stable, ... }:
 
 {
   # Home Manager needs a bit of information about you and the paths it should
@@ -21,11 +21,19 @@
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
     # pkgs.hello
+
+    # Utilities
     pkgs.fastfetch
+    pkgs.gnome-tweaks
 
+    # Security/Infra Tools
     pkgs.nmap
+    pkgs-stable.vagrant
 
+    # Dev Tools
+    pkgs.asdf-vm
     pkgs.jetbrains.pycharm-community
+   
     # # It is sometimes useful to fine-tune packages, for example, by applying
     # # overrides. You can do that directly here, just don't forget the
     # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
@@ -39,6 +47,12 @@
     #   echo "Hello, ${config.home.username}!"
     # '')
   ];
+
+  #nixpkgs.config.allowUnfreePredicate = pkg:
+   # builtins.elem (lib.getName pkg) [
+      # Add additional package names here
+    #  "vagrant"
+    #];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
