@@ -1,6 +1,26 @@
-{ lib, config, pkgs, pkgs-stable, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  pkgs-stable,
+  ...
+}:
 
 {
+  imports = [
+    # If you want to use modules your own flake exports (from modules/home-manager):
+    # outputs.homeManagerModules.example
+
+    # Or modules exported from other flakes (such as nix-colors):
+    # inputs.nix-colors.homeManagerModules.default
+
+    # You can also split up your configuration and import pieces of it here:
+    # ./nvim.nix
+    ./modules/gtk.nix
+    ./modules/terminal.nix
+    ./modules/vscode.nix
+  ];
+
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "ruyu";
@@ -17,42 +37,44 @@
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
-  home.packages = [
-    # # Adds the 'hello' command to your environment. It prints a friendly
-    # # "Hello, world!" when run.
-    # pkgs.hello
+  home.packages =
+    (with pkgs; [
+      # # Adds the 'hello' command to your environment. It prints a friendly
+      # # "Hello, world!" when run.
+      # pkgs.hello
 
-    # Utilities
-    pkgs.fastfetch
-    pkgs.gnome-tweaks
+      # Utilities
+      yt-dlp
+      gnome-tweaks
 
-    # Security/Infra Tools
-    pkgs.nmap
-    pkgs-stable.vagrant
+      # Security/Infra Tools
+      nmap
 
-    # Dev Tools
-    pkgs.asdf-vm
-    pkgs.jetbrains.pycharm-community
-   
-    # # It is sometimes useful to fine-tune packages, for example, by applying
-    # # overrides. You can do that directly here, just don't forget the
-    # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
-    # # fonts?
-    # (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
+      # Dev Tools
+      asdf-vm
+      jetbrains.pycharm-community
+      flatpak-builder
+      nixfmt-rfc-style
+    ])
+    ++ (with pkgs-stable; [
+      # Packages that break with nightly
 
-    # # You can also create simple shell scripts directly inside your
-    # # configuration. For example, this adds a command 'my-hello' to your
-    # # environment:
-    # (pkgs.writeShellScriptBin "my-hello" ''
-    #   echo "Hello, ${config.home.username}!"
-    # '')
-  ];
+      # Security/Infra Tools
+      vagrant
+    ]);
 
-  #nixpkgs.config.allowUnfreePredicate = pkg:
-   # builtins.elem (lib.getName pkg) [
-      # Add additional package names here
-    #  "vagrant"
-    #];
+  # # It is sometimes useful to fine-tune packages, for example, by applying
+  # # overrides. You can do that directly here, just don't forget the
+  # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
+  # # fonts?
+  # (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
+
+  # # You can also create simple shell scripts directly inside your
+  # # configuration. For example, this adds a command 'my-hello' to your
+  # # environment:
+  # (pkgs.writeShellScriptBin "my-hello" ''
+  #   echo "Hello, ${config.home.username}!"
+  # '')
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
