@@ -1,5 +1,6 @@
 { pkgs, ... }:
 {
+  # System info
   programs.fastfetch = {
     enable = true;
     settings = {
@@ -37,6 +38,7 @@
     };
   };
 
+  # Shell customization 
   programs.starship = {
     enable = true;
     settings = {
