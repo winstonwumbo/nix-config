@@ -6,6 +6,7 @@
     settings = {
       logo = {
         source = "~/Pictures/luce-bankai.jpeg";
+        type = "kitty";
         padding = {
           right = 6;
         };

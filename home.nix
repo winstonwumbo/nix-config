@@ -46,6 +46,8 @@
       # Utilities
       yt-dlp
       gnome-tweaks
+      gnomeExtensions.dash-to-panel
+      gnomeExtensions.arcmenu
 
       # Security/Infra Tools
       nmap
