@@ -1,9 +1,8 @@
 format = """
-[░▒▓](#a3aed2)\
-[  ](bg:#a3aed2 fg:#090c0c)\
-[](bg:#769ff0 fg:#a3aed2)\
-$directory\
+[](fg:#769ff0)\
+$username\
 [](fg:#769ff0 bg:#394260)\
+$directory\
 $git_branch\
 $git_status\
 [](fg:#394260 bg:#212736)\
@@ -11,13 +10,17 @@ $nodejs\
 $rust\
 $golang\
 $php\
-[](fg:#212736 bg:#1d2230)\
-$time\
-[ ](fg:#1d2230)\
-\n$character"""
+[](fg:#212736)\
+"""
+
+[username]
+show_always = true
+style_user = "fg:#e5e5e5 bg:#769ff0"
+style_root = "fg:#e5e5e5 bg:#769ff0"
+format = '[ 󱓞  $user ]($style)'
 
 [directory]
-style = "fg:#e3e5e5 bg:#769ff0"
+style = "fg:#e3e5e5 bg:#394260"
 format = "[ $path ]($style)"
 truncation_length = 3
 truncation_symbol = "…/"

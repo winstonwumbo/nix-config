@@ -1,5 +1,11 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 {
+  # Terminal
+  programs.wezterm = {
+    enable = true;
+    package = (config.lib.nixGL.wrap pkgs.wezterm);
+    extraConfig = builtins.readFile ../dotfiles/wezterm.lua;
+  };
   # System info
   programs.fastfetch = {
     enable = true;
@@ -19,7 +25,10 @@
       modules = [
         "title"
         "break"
-        "os"
+        {
+          type = "os";
+          format = "Fedora Silverblue 41";
+        }
         "host"
         "uptime"
         "packages"
@@ -42,8 +51,6 @@
   # Shell customization 
   programs.starship = {
     enable = true;
-    settings = {
-      username.show_always = true;
-    };
+    settings = pkgs.lib.importTOML ../dotfiles/starship.toml;
   };
 }

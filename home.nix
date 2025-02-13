@@ -3,6 +3,7 @@
   config,
   pkgs,
   pkgs-stable,
+  nixgl,
   ...
 }:
 
@@ -17,6 +18,7 @@
     # You can also split up your configuration and import pieces of it here:
     # ./nvim.nix
     ./modules/gtk.nix
+    ./modules/helix.nix
     ./modules/terminal.nix
     ./modules/vscode.nix
   ];
@@ -35,6 +37,12 @@
   # release notes.
   home.stateVersion = "24.11"; # Please read the comment before changing.
 
+  nixGL = {
+    packages = nixgl.packages;
+    defaultWrapper = "mesa";
+    installScripts = [ "mesa" ];
+  };
+
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages =
@@ -45,23 +53,34 @@
 
       # Utilities
       yt-dlp
+      ffmpegthumbnailer
       gnome-tweaks
       gnomeExtensions.dash-to-panel
       gnomeExtensions.arcmenu
 
-      # Security/Infra Tools
+      # CLI
       nmap
+      unimatrix
+      fzf
 
       # Dev Tools
       asdf-vm
+      gcc
+      go
+
       jetbrains.pycharm-community
+      jetbrains.idea-community
+      jetbrains.clion
+      ghidra
+
       flatpak-builder
+
       nixfmt-rfc-style
     ])
     ++ (with pkgs-stable; [
       # Packages that break with nightly
 
-      # Security/Infra Tools
+      # CLI
       vagrant
     ]);
 
@@ -91,7 +110,6 @@
     #   org.gradle.console=verbose
     #   org.gradle.daemon.idletimeout=3600000
     # '';
-    ".config/wezterm/wezterm.lua".source = ./dotfiles/wezterm.lua;
   };
 
   # Home Manager can also manage your environment variables through

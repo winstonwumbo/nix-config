@@ -10,6 +10,10 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixgl = {
+      url = "github:nix-community/nixGL";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nix-vscode-extensions = {
       url = "github:nix-community/nix-vscode-extensions";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -21,6 +25,7 @@
       nixpkgs,
       nixpkgs-stable,
       home-manager,
+      nixgl,
       nix-vscode-extensions,
       ...
     }:
@@ -48,6 +53,7 @@
         modules = [
           ./home.nix
           {
+            # Stuff that overrides or adds a package to nixpkgs
             nixpkgs.overlays = [
               nix-vscode-extensions.overlays.default # Also have a look at https://github.com/nix-community/nix-vscode-extensions/issues/29
             ];
@@ -58,6 +64,7 @@
         # to pass through arguments to home.nix
         extraSpecialArgs = {
           inherit pkgs-stable;
+          inherit nixgl;
         };
       };
     };
