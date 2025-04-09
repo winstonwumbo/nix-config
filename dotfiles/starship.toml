@@ -1,16 +1,16 @@
 format = """
-[](fg:#769ff0)\
+[](fg:#769ff0)\
 $username\
-[](fg:#769ff0 bg:#394260)\
+[](fg:#769ff0 bg:#394260)\
 $directory\
 $git_branch\
 $git_status\
-[](fg:#394260 bg:#212736)\
+[](fg:#394260 bg:#212736)\
 $nodejs\
 $rust\
 $golang\
 $php\
-[](fg:#212736)\
+[](fg:#212736)\
 """
 
 [username]

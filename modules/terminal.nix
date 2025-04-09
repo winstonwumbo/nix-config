@@ -12,7 +12,7 @@
     settings = {
       logo = {
         source = "~/Pictures/luce-bankai.jpeg";
-        type = "kitty";
+        type = "sixel";
         padding = {
           right = 6;
         };
@@ -27,18 +27,30 @@
         "break"
         {
           type = "os";
-          format = "Fedora Silverblue 41";
+          format = "{name} {version-id} [{variant} {arch}]";
         }
         "host"
         "uptime"
-        "packages"
+        {
+          type = "packages";
+          format = "{rpm} (rpm), {nix-user} (nix-user), {flatpak-all} (flatpak)";
+        }
         "de"
         "wm"
-        "theme"
+        {
+          type = "theme";
+          format = "Marble [Shell], Graphite Nord [GTK2/3/4]";
+        }
         "icons"
-        "terminal"
+        {
+          type = "font";
+          format = "Helvetica Standard (Liberation Sans...)";
+        }
+        {
+          type = "terminal";
+          format = "{pretty-name} ({version})";
+        }
         "cpu"
-        "gpu"
         "memory"
         "disk"
         "localip"

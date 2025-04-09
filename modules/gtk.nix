@@ -1,13 +1,17 @@
 {pkgs, ...}: {
   gtk = {
+    # Not importing for now
     enable = true;
+    # Flatpaks don't like the symlinks =/
     theme = {
-      name = "adw-gtk3";
-      package = pkgs.adw-gtk3;
+      name = "Orchis-Compact";
+      package = (pkgs.orchis-theme.override {
+        tweaks = [ "solid" "primary"];
+      });
     };
     iconTheme = {
-      name = "Numix-Square";
-      package = pkgs.numix-icon-theme-square;
+      name = "Numix-Circle";
+      package = pkgs.numix-icon-theme-circle;
     };
   };
 }

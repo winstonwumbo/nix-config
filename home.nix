@@ -17,10 +17,11 @@
 
     # You can also split up your configuration and import pieces of it here:
     # ./nvim.nix
-    ./modules/gtk.nix
+    # ./modules/gtk.nix
     ./modules/helix.nix
     ./modules/terminal.nix
     ./modules/vscode.nix
+    ./modules/xdg.nix
   ];
 
   # Home Manager needs a bit of information about you and the paths it should
@@ -43,6 +44,8 @@
     installScripts = [ "mesa" ];
   };
 
+  fonts.fontconfig.enable = true;
+
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages =
@@ -51,12 +54,35 @@
       # # "Hello, world!" when run.
       # pkgs.hello
 
+      # Config
+      nerd-fonts.jetbrains-mono
+      ibm-plex
+      fira
+      poppins
+      rubik
+      p7zip
+
+      ffmpeg
+
       # Utilities
       yt-dlp
-      ffmpegthumbnailer
+      wgcf
+      bitwarden-desktop
+
       gnome-tweaks
+      # Popular
       gnomeExtensions.dash-to-panel
       gnomeExtensions.arcmenu
+      # Maintained by Ubuntu
+      gnomeExtensions.appindicator
+      # Maintained by Gnome
+      gnomeExtensions.auto-move-windows
+      gnomeExtensions.user-themes
+      # Nice workflow stuff
+      gnomeExtensions.rounded-window-corners-reborn
+      gnomeExtensions.space-bar
+      gtk-engine-murrine
+      sassc
 
       # CLI
       nmap
@@ -64,17 +90,18 @@
       fzf
 
       # Dev Tools
-      asdf-vm
+      mise
       gcc
-      go
+      gdb
 
       jetbrains.pycharm-community
-      jetbrains.idea-community
       jetbrains.clion
       ghidra
 
       flatpak-builder
+      appstream
 
+      nixpkgs-manual
       nixfmt-rfc-style
     ])
     ++ (with pkgs-stable; [
@@ -83,6 +110,8 @@
       # CLI
       vagrant
     ]);
+
+    programs.zsh.enable = true;
 
   # # It is sometimes useful to fine-tune packages, for example, by applying
   # # overrides. You can do that directly here, just don't forget the

@@ -32,13 +32,13 @@
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs {
-        system = "x86_64-linux";
+        inherit system;
         config = {
           allowUnfree = true;
         };
       };
       pkgs-stable = import nixpkgs-stable {
-        system = "x86_64-linux";
+        inherit system;
         config = {
           allowUnfree = true;
         };
