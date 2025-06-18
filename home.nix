@@ -56,10 +56,16 @@
 
       # Config
       nerd-fonts.jetbrains-mono
-      ibm-plex
-      fira
-      poppins
-      rubik
+      nerd-fonts._3270
+      nerd-fonts.sauce-code-pro
+      nerd-fonts.roboto-mono
+      nerd-fonts.ubuntu-sans
+      nerd-fonts.mononoki
+      nerd-fonts.iosevka
+      nerd-fonts.blex-mono
+      nerd-fonts.caskaydia-cove
+      nerd-fonts._0xproto
+
       p7zip
 
       ffmpeg
@@ -80,7 +86,6 @@
       gnomeExtensions.user-themes
       # Nice workflow stuff
       gnomeExtensions.rounded-window-corners-reborn
-      gnomeExtensions.space-bar
       gtk-engine-murrine
       sassc
 
@@ -88,11 +93,14 @@
       nmap
       unimatrix
       fzf
+      xorg.xlsclients
 
       # Dev Tools
       mise
       gcc
       gdb
+      turso-cli
+      sqlite
 
       jetbrains.pycharm-community
       jetbrains.clion
