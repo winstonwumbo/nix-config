@@ -18,7 +18,8 @@
     # You can also split up your configuration and import pieces of it here:
     # ./nvim.nix
     # ./modules/gtk.nix
-    ./modules/helix.nix
+#    ./modules/helix.nix
+    ./modules/browsers.nix
     ./modules/terminal.nix
     ./modules/vscode.nix
     ./modules/xdg.nix
@@ -36,7 +37,7 @@
   # You should not change this value, even if you update Home Manager. If you do
   # want to update the value, then make sure to first check the Home Manager
   # release notes.
-  home.stateVersion = "24.11"; # Please read the comment before changing.
+  home.stateVersion = "25.05"; # Please read the comment before changing.
 
   nixGL = {
     packages = nixgl.packages;
@@ -54,62 +55,54 @@
       # # "Hello, world!" when run.
       # pkgs.hello
 
-      # Config
+      # Gnome config
+      (pkgs.marble-shell-theme.override {
+        colors = [ "blue" ];
+        additionalInstallationTweaks = [ "-Pnp" "--hue=220" "--name=gnomeblue" "--mode=dark" "--filled" "-O" "--sat=80"];
+      })
+
       nerd-fonts.jetbrains-mono
-      nerd-fonts._3270
-      nerd-fonts.sauce-code-pro
-      nerd-fonts.roboto-mono
-      nerd-fonts.ubuntu-sans
-      nerd-fonts.mononoki
-      nerd-fonts.iosevka
-      nerd-fonts.blex-mono
-      nerd-fonts.caskaydia-cove
-      nerd-fonts._0xproto
-
-      p7zip
-
-      ffmpeg
-
-      # Utilities
-      yt-dlp
-      wgcf
-      bitwarden-desktop
-
       gnome-tweaks
-      # Popular
+      
+      # Desktop extensions
+      gnomeExtensions.user-themes
       gnomeExtensions.dash-to-panel
       gnomeExtensions.arcmenu
+      gnomeExtensions.caffeine
       # Maintained by Ubuntu
       gnomeExtensions.appindicator
       # Maintained by Gnome
-      gnomeExtensions.auto-move-windows
-      gnomeExtensions.user-themes
+ #     gnomeExtensions.auto-move-windows
       # Nice workflow stuff
-      gnomeExtensions.rounded-window-corners-reborn
-      gtk-engine-murrine
-      sassc
+#      gnomeExtensions.rounded-window-corners-reborn
+      # gtk-engine-murrine
+      # sassc
 
-      # CLI
-      nmap
+      # CLI utils
+      yt-dlp
+      wgcf
       unimatrix
       fzf
       xorg.xlsclients
+      p7zip
+      ffmpeg
 
-      # Dev Tools
+      # Dev tools
       mise
       gcc
       gdb
       turso-cli
       sqlite
-
       jetbrains.pycharm-community
       jetbrains.clion
+
+      # Cyber tools
+      nmap
       ghidra
 
       flatpak-builder
       appstream
 
-      nixpkgs-manual
       nixfmt-rfc-style
     ])
     ++ (with pkgs-stable; [
@@ -118,8 +111,25 @@
       # CLI
       vagrant
     ]);
+  
+  dconf.settings = {
+    # ...
+    "org/gnome/shell" = {
+      disable-user-extensions = false;
 
-    programs.zsh.enable = true;
+      enabled-extensions = [
+        "user-theme@gnome-shell-extensions.gcampax.github.com"
+        "arcmenu@arcmenu.com"
+        "dash-to-panel@jderose9.github.com"
+        "caffeine@patapon.info"
+      ];
+    };
+
+    "org/gnome/shell/extensions/user-theme" = {
+        name = "Marble-gnomeblue-dark";
+    };
+  };
+
 
   # # It is sometimes useful to fine-tune packages, for example, by applying
   # # overrides. You can do that directly here, just don't forget the
