@@ -6,9 +6,10 @@
     extensions = [
       { id = "ddkjiahejlhfcafbddmgiahcphecmpfh"; } # ublock origin
     ];
-  };
-
-  xdg.configFile."brave-flags.conf" = {
-    source = config.lib.file.mkOutOfStoreSymlink "../dotfiles/brave-flags.conf";
+    commandLineArgs = [
+      "--enable-features=TouchpadOverscrollHistoryNavigation"
+      "--enable-blink-features=MiddleClickAutoscroll"
+      "--ozone-platform-hint=auto"
+    ];
   };
 }

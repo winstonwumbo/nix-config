@@ -14,4 +14,5 @@
       package = pkgs.numix-icon-theme-circle;
     };
   };
+
 }
