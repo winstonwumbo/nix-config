@@ -18,11 +18,10 @@
     # You can also split up your configuration and import pieces of it here:
     # ./nvim.nix
     # ./modules/gtk.nix
-#    ./modules/helix.nix
+    #    ./modules/helix.nix
     ./modules/browsers.nix
     ./modules/terminal.nix
     ./modules/vscode.nix
-    ./modules/xdg.nix
   ];
 
   # Home Manager needs a bit of information about you and the paths it should
@@ -58,12 +57,20 @@
       # Gnome config
       (pkgs.marble-shell-theme.override {
         colors = [ "blue" ];
-        additionalInstallationTweaks = [ "-Pnp" "--hue=220" "--name=gnomeblue" "--mode=dark" "--filled" "-O" "--sat=80"];
+        additionalInstallationTweaks = [
+          "-Pnp"
+          "--hue=220"
+          "--name=gnomeblue"
+          "--mode=dark"
+          "--filled"
+          "-O"
+          "--sat=80"
+        ];
       })
 
       nerd-fonts.jetbrains-mono
       gnome-tweaks
-      
+
       # Desktop extensions
       gnomeExtensions.user-themes
       gnomeExtensions.dash-to-panel
@@ -72,9 +79,9 @@
       # Maintained by Ubuntu
       gnomeExtensions.appindicator
       # Maintained by Gnome
- #     gnomeExtensions.auto-move-windows
+      #     gnomeExtensions.auto-move-windows
       # Nice workflow stuff
-#      gnomeExtensions.rounded-window-corners-reborn
+      #      gnomeExtensions.rounded-window-corners-reborn
       # gtk-engine-murrine
       # sassc
 
@@ -85,7 +92,6 @@
       fzf
       xorg.xlsclients
       p7zip
-      ffmpeg
 
       # Dev tools
       mise
@@ -93,25 +99,27 @@
       gdb
       turso-cli
       sqlite
-      jetbrains.pycharm-community
-      jetbrains.clion
 
-      # Cyber tools
-      nmap
-      ghidra
-
+      # Container tools
       flatpak-builder
       appstream
+      docker-compose
+      kubectl
+      kind
+
+      # IDEs
+      jetbrains.pycharm-community
+      jetbrains.clion
+      jetbrains.rust-rover
+      ghidra
 
       nixfmt-rfc-style
     ])
     ++ (with pkgs-stable; [
       # Packages that break with nightly
-
-      # CLI
       vagrant
     ]);
-  
+
   dconf.settings = {
     # ...
     "org/gnome/shell" = {
@@ -122,12 +130,27 @@
         "arcmenu@arcmenu.com"
         "dash-to-panel@jderose9.github.com"
         "caffeine@patapon.info"
+        "appindicatorsupport@rgcjonas.gmail.com"
       ];
     };
 
     "org/gnome/shell/extensions/user-theme" = {
-        name = "Marble-gnomeblue-dark";
+      name = "Marble-gnomeblue-dark";
     };
+  };
+
+  programs.fish = {
+    enable = true;
+    shellAliases = {
+      nix-upgrade = "home-manager switch";
+      nix-edit = "code ${config.home.homeDirectory}/.config/nix-config";
+    };
+    shellInit = ''
+      set fish_greeting # Disable greeting
+
+      set -x DOCKER_CONFIG $HOME/.config/docker
+      mise activate fish | source
+    '';
   };
 
   # # It is sometimes useful to fine-tune packages, for example, by applying
@@ -150,7 +173,7 @@
     # # the Nix store. Activating the configuration will then make '~/.screenrc' a
     # # symlink to the Nix store copy.
     # ".screenrc".source = dotfiles/screenrc;
-
+    ".config/docker/config.json".source = dotfiles/docker-config.json
     # # You can also set the file content immediately.
     # ".gradle/gradle.properties".text = ''
     #   org.gradle.console=verbose
@@ -177,6 +200,7 @@
   home.sessionVariables = {
     # EDITOR = "emacs";
     NIXOS_OZONE_WL = "1";
+    SSH_AUTH_SOCK = "${config.home.homeDirectory}/.var/app/com.bitwarden.desktop/data/.bitwarden-ssh-agent.sock";
   };
 
   # Let Home Manager install and manage itself.
