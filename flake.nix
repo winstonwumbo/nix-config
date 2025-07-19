@@ -5,6 +5,7 @@
     # Specify the source of Home Manager and Nixpkgs.
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.05";
+    nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=latest";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -24,6 +25,7 @@
     {
       nixpkgs,
       nixpkgs-stable,
+      nix-flatpak,
       home-manager,
       nixgl,
       nix-vscode-extensions,
@@ -51,6 +53,7 @@
         # Specify your home configuration modules here, for example,
         # the path to your home.nix.
         modules = [
+          nix-flatpak.homeManagerModules.nix-flatpak
           ./home.nix
           {
             # Stuff that overrides or adds a package to nixpkgs

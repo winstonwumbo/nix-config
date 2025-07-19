@@ -19,6 +19,7 @@
     # ./nvim.nix
     # ./modules/gtk.nix
     #    ./modules/helix.nix
+    ./modules/flatpaks.nix
     ./modules/browsers.nix
     ./modules/terminal.nix
     ./modules/vscode.nix
@@ -107,16 +108,15 @@
       kubectl
       kind
 
-      # IDEs
-      jetbrains.pycharm-community
-      jetbrains.clion
-      jetbrains.rust-rover
       ghidra
 
       nixfmt-rfc-style
     ])
     ++ (with pkgs-stable; [
       # Packages that break with nightly
+      jetbrains.pycharm-community
+      jetbrains.clion
+      jetbrains.rust-rover
       vagrant
     ]);
 
@@ -173,7 +173,7 @@
     # # the Nix store. Activating the configuration will then make '~/.screenrc' a
     # # symlink to the Nix store copy.
     # ".screenrc".source = dotfiles/screenrc;
-    ".config/docker/config.json".source = dotfiles/docker-config.json
+
     # # You can also set the file content immediately.
     # ".gradle/gradle.properties".text = ''
     #   org.gradle.console=verbose
@@ -181,6 +181,10 @@
     # '';
   };
 
+  xdg.configFile = {
+    "docker/config.json".source = dotfiles/docker-config.json;
+  };
+  
   # Home Manager can also manage your environment variables through
   # 'home.sessionVariables'. These will be explicitly sourced when using a
   # shell provided by Home Manager. If you don't want to manage your shell
