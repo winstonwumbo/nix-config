@@ -11,7 +11,7 @@
     enable = true;
     settings = {
       logo = {
-        source = "~/Pictures/luce-bankai.jpeg";
+        source = "${config.home.homeDirectory}/Pictures/luce-bankai.jpeg";
         type = "sixel";
         padding = {
           right = 6;

@@ -17,10 +17,10 @@
 
     # You can also split up your configuration and import pieces of it here:
     # ./nvim.nix
-    # ./modules/gtk.nix
     #    ./modules/helix.nix
-    ./modules/flatpaks.nix
-    ./modules/browsers.nix
+    ./modules/browser.nix
+    ./modules/flatpak.nix
+    ./modules/gtk.nix
     ./modules/terminal.nix
     ./modules/vscode.nix
   ];
@@ -98,6 +98,7 @@
       mise
       gcc
       gdb
+      ghidra
       turso-cli
       sqlite
 
@@ -108,13 +109,11 @@
       kubectl
       kind
 
-      ghidra
-
+      nil
       nixfmt-rfc-style
     ])
     ++ (with pkgs-stable; [
       # Packages that break with nightly
-      jetbrains.pycharm-community
       jetbrains.clion
       jetbrains.rust-rover
       vagrant
@@ -142,13 +141,12 @@
   programs.fish = {
     enable = true;
     shellAliases = {
-      nix-upgrade = "home-manager switch";
+      nix-upgrade = "home-manager switch"; #  && nix-collect-garbage --delete-older-than 14d
       nix-edit = "code ${config.home.homeDirectory}/.config/nix-config";
     };
     shellInit = ''
       set fish_greeting # Disable greeting
 
-      set -x DOCKER_CONFIG $HOME/.config/docker
       mise activate fish | source
     '';
   };
@@ -179,6 +177,10 @@
     #   org.gradle.console=verbose
     #   org.gradle.daemon.idletimeout=3600000
     # '';
+    ".local/share/icons/Numix".source = "${pkgs.numix-icon-theme-circle}/share/icons/Numix";
+    ".local/share/icons/Numix-Light".source = "${pkgs.numix-icon-theme-circle}/share/icons/Numix-Light";
+    ".local/share/icons/Numix-Circle".source = "${pkgs.numix-icon-theme-circle}/share/icons/Numix-Circle";
+    ".local/share/icons/Numix-Circle-Light".source = "${pkgs.numix-icon-theme-circle}/share/icons/Numix-Circle-Light";
   };
 
   xdg.configFile = {
@@ -203,6 +205,7 @@
   #
   home.sessionVariables = {
     # EDITOR = "emacs";
+    DOCKER_CONFIG = "${config.home.homeDirectory}/.config/docker";
     NIXOS_OZONE_WL = "1";
     SSH_AUTH_SOCK = "${config.home.homeDirectory}/.var/app/com.bitwarden.desktop/data/.bitwarden-ssh-agent.sock";
   };
