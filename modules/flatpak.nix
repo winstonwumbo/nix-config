@@ -2,8 +2,14 @@
   services.flatpak = {
     enable = true;
     uninstallUnused = true;
-    update.onActivation = true;
+    update.auto = {
+      enable = true;
+      onCalendar = "weekly";
+    };
+
     packages = [
+      # Theme
+      "org.gtk.Gtk3theme.adw-gtk3-dark"
       # Sysadmin
       "com.github.tchx84.Flatseal"
       "ca.desrt.dconf-editor"
@@ -27,18 +33,12 @@
     ];
 
     overrides = {
-      global.Context = {
-        filesystems = [
-          "/nix/store:ro"
-          "/var/home/ruyu/.nix-profile/share/icons:ro"
-          "/var/home/ruyu/.nix-profile/share/icons/Numix-Circle:ro"
-          "/var/home/ruyu/.nix-profile/share/icons/Numix-Circle-Light:ro"
-          "/var/home/ruyu/.nix-profile/share/icons/Numix:ro"
-          "/var/home/ruyu/.nix-profile/share/icons/Numix-Light:ro"
-          "/nix/var/nix/profiles/default/share:ro"
-          "/usr/share/icons:ro"
-          "~/.local/share/icons:ro"
-        ];
+      global = {
+        Context = {
+          filesystems = [
+            "/nix/store:ro"
+          ];
+        };
       };
     };
   };

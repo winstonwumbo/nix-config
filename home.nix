@@ -20,7 +20,6 @@
     #    ./modules/helix.nix
     ./modules/browser.nix
     ./modules/flatpak.nix
-    ./modules/gtk.nix
     ./modules/terminal.nix
     ./modules/vscode.nix
   ];
@@ -31,12 +30,8 @@
   home.homeDirectory = "/var/home/ruyu";
 
   # This value determines the Home Manager release that your configuration is
-  # compatible with. This helps avoid breakage when a new Home Manager release
-  # introduces backwards incompatible changes.
-  #
-  # You should not change this value, even if you update Home Manager. If you do
-  # want to update the value, then make sure to first check the Home Manager
-  # release notes.
+  # compatible with. You should not change this value, even if you update Home Manager. 
+  # If you do want to update the value, then make sure to first check the release notes.
   home.stateVersion = "25.05"; # Please read the comment before changing.
 
   nixGL = {
@@ -51,10 +46,6 @@
   # environment.
   home.packages =
     (with pkgs; [
-      # # Adds the 'hello' command to your environment. It prints a friendly
-      # # "Hello, world!" when run.
-      # pkgs.hello
-
       # Gnome config
       (pkgs.marble-shell-theme.override {
         colors = [ "blue" ];
@@ -101,6 +92,7 @@
       ghidra
       turso-cli
       sqlite
+      (config.lib.nixGL.wrap pkgs.warp-terminal)
 
       # Container tools
       flatpak-builder
@@ -164,19 +156,38 @@
   #   echo "Hello, ${config.home.username}!"
   # '')
 
+
+  gtk = {
+    enable = true;
+
+    # theme = {
+    #   name = "Graphite-blue-compact-nord";
+    #   package = (pkgs.graphite-gtk-theme.override {
+    #     themeVariants = [ "blue" ];
+    #     colorVariants = [ "standard" ];
+    #     sizeVariants = [ "compact" ];
+    #     tweaks = [ "normal" "nord"];
+    #   });
+    # };
+
+    theme = {
+      name = "adw-gtk3-dark";
+      # package = (pkgs.orchis-theme.override {
+      #   tweaks = [ "solid" "primary"];
+      # });
+    };
+
+    iconTheme = {
+      name = "Numix-Circle";
+      package = pkgs.numix-icon-theme-circle;
+    };
+  };
+
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
   home.file = {
-    # # Building this configuration will create a copy of 'dotfiles/screenrc' in
-    # # the Nix store. Activating the configuration will then make '~/.screenrc' a
-    # # symlink to the Nix store copy.
-    # ".screenrc".source = dotfiles/screenrc;
-
-    # # You can also set the file content immediately.
-    # ".gradle/gradle.properties".text = ''
-    #   org.gradle.console=verbose
-    #   org.gradle.daemon.idletimeout=3600000
-    # '';
+    # # Building this configuration will create a copy of 'dotfiles/blank' in
+    # # the Nix store.
     ".local/share/icons/Numix".source = "${pkgs.numix-icon-theme-circle}/share/icons/Numix";
     ".local/share/icons/Numix-Light".source = "${pkgs.numix-icon-theme-circle}/share/icons/Numix-Light";
     ".local/share/icons/Numix-Circle".source = "${pkgs.numix-icon-theme-circle}/share/icons/Numix-Circle";
@@ -184,25 +195,16 @@
   };
 
   xdg.configFile = {
+    # "gtk-4.0/assets".source = "${pkgs.orchis-theme}/share/themes/Orchis-Light-Compact/gtk-4.0/assets";
+    # "gtk-4.0/gtk.css".source = "${pkgs.orchis-theme}/share/themes/Orchis-Light-Compact/gtk-4.0/gtk.css";
     "docker/config.json".source = dotfiles/docker-config.json;
   };
   
-  # Home Manager can also manage your environment variables through
-  # 'home.sessionVariables'. These will be explicitly sourced when using a
-  # shell provided by Home Manager. If you don't want to manage your shell
+  # If you don't want to manage your shell
   # through Home Manager then you have to manually source 'hm-session-vars.sh'
   # located at either
   #
   #  ~/.nix-profile/etc/profile.d/hm-session-vars.sh
-  #
-  # or
-  #
-  #  ~/.local/state/nix/profiles/profile/etc/profile.d/hm-session-vars.sh
-  #
-  # or
-  #
-  #  /etc/profiles/per-user/ruyu/etc/profile.d/hm-session-vars.sh
-  #
   home.sessionVariables = {
     # EDITOR = "emacs";
     DOCKER_CONFIG = "${config.home.homeDirectory}/.config/docker";

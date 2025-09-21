@@ -18,7 +18,6 @@
             ms-python.python
             ms-python.vscode-pylance
             ms-python.debugpy
-            julialang.language-julia
 
             smockle.xcode-default-theme
             pkief.material-icon-theme
@@ -26,11 +25,14 @@
           ++ (with pkgs.vscode-extensions; [
             # list of extensions that need nixpkgs patches
             # Seems to break less if I just install them from VSCode imperatively
+            julialang.language-julia
             ms-vscode.remote-explorer
             ms-vscode-remote.remote-ssh
+            ms-vscode-remote.remote-containers
             ms-azuretools.vscode-containers
             github.copilot
             github.copilot-chat
+            github.vscode-github-actions
             # ms-toolsai.jupyter
             # ms-toolsai.jupyter-keymap
             # ms-toolsai.jupyter-renderers
@@ -51,6 +53,7 @@
           "terminal.integrated.enableImages" = true;
 
           # Language configs
+          "terminal.integrated.defaultProfile.linux" = "fish";
           "nix.enableLanguageServer" = true;
           "nix.serverPath" = "nil";
           "nix.serverSettings" = {

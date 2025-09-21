@@ -7,6 +7,7 @@
       { id = "ddkjiahejlhfcafbddmgiahcphecmpfh"; } # ublock origin
       { id = "dlnejlppicbjfcfcedcflplfjajinajd"; } # bonjourr
       { id = "nngceckbapebfimnlniiiahkandclblb"; } # bitwarden
+      { id = "cmpdlhmnmjhihmcfnigoememnffkimlk"; } # catppuccin macchiato
     ];
     commandLineArgs = [
       "--enable-features=TouchpadOverscrollHistoryNavigation"
