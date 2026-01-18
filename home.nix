@@ -32,10 +32,13 @@
   # If you do want to update the value, then make sure to first check the release notes.
   home.stateVersion = "25.05"; # Please read the comment before changing.
 
-  nixGL = {
-    packages = nixgl.packages;
-    defaultWrapper = "mesa";
-    installScripts = [ "mesa" ];
+  targets.genericLinux = { 
+    enable = true;
+    nixGL = {
+      packages = nixgl.packages;
+      defaultWrapper = "mesa";
+      installScripts = [ "mesa" ];
+    };
   };
 
   fonts.fontconfig.enable = true;
@@ -65,18 +68,21 @@
       gnomeExtensions.user-themes
       gnomeExtensions.dash-to-panel
       gnomeExtensions.arcmenu
+      gnomeExtensions.rounded-window-corners-reborn
       gnomeExtensions.caffeine
       # Maintained by Ubuntu
       gnomeExtensions.appindicator
       # Maintained by Gnome
       #     gnomeExtensions.auto-move-windows
       # Nice workflow stuff
-      #      gnomeExtensions.rounded-window-corners-reborn
       # gtk-engine-murrine
       # sassc
 
       # Terminal tools
       (config.lib.nixGL.wrap wezterm)
+      smartmontools
+      rclone
+      ncdu
       yt-dlp
       wgcf
       unimatrix
@@ -88,6 +94,7 @@
       jetbrains-toolbox
       gh
       mise
+      yarn
       gcc
       gdb
       cppcheck
@@ -97,8 +104,10 @@
       
       # Sec tools
       ghidra
+      nmap
       detect-it-easy
       zap
+      (config.lib.nixGL.wrap burpsuite)
 
       # Container tools
       flatpak-builder
@@ -107,7 +116,8 @@
       kubectl
       kind
       nixd
-      nixfmt-rfc-style
+      nil
+      nixfmt
     ])
     ++ (with pkgs-stable; [
       # Packages that break with nightly
@@ -119,15 +129,19 @@
     enable = true;
     shellAliases = {
       nix-update = "cd ${config.home.homeDirectory}/.config/nix-config && nix flake update && cd -";
-      nix-upgrade = "home-manager switch"; # && nix-collect-garbage --delete-older-than 14d
+      nix-upgrade = "home-manager switch";
       nix-edit = "code ${config.home.homeDirectory}/.config/nix-config";
+      nix-autoclean = "nix-collect-garbage --delete-older-than 14d";
+      ssmartctl = "sudo ${config.home.homeDirectory}/.nix-profile/bin/smartctl";
+      sncdu = "sudo ${config.home.homeDirectory}/.nix-profile/bin/ncdu";
+      snmap = "sudo ${config.home.homeDirectory}/.nix-profile/bin/nmap";
     };
     shellInit = ''
       set fish_greeting # Disable greeting
 
       mise activate fish | source
 
-      fish_add_path --global ~/.yarn/bin
+      fish_add_path --global ${config.home.homeDirectory}/.yarn/bin
     '';
   };
 
@@ -190,6 +204,7 @@
         "user-theme@gnome-shell-extensions.gcampax.github.com"
         "arcmenu@arcmenu.com"
         "dash-to-panel@jderose9.github.com"
+        "rounded-window-corners@fxgn"
         "caffeine@patapon.info"
         "appindicatorsupport@rgcjonas.gmail.com"
       ];
@@ -216,28 +231,29 @@
     # Sets default terminal for Gnome .desktop shortcuts
     # See: https://github.com/ublue-os/main/issues/211#issuecomment-1551600704
     # Also see: https://discussion.fedoraproject.org/t/fedora-terminal-and-alternatives/106438
-    ".local/bin/xdg-terminal-exec".source = dotfiles/xdg-terminal-exec;
+    ".local/bin/xdg-terminal-exec".source = dotfiles/terminal/xdg-terminal-exec;
 
     ".local/share/dbus-1/services/ca.desrt.dconf-editor.service".source =
       dotfiles/dbus-services/ca.desrt.dconf-editor.service;
     ".local/share/dbus-1/services/com.github.neithern.g4music.service".source =
       dotfiles/dbus-services/com.github.neithern.g4music.service;
-    ".local/share/dbus-1/services/com.github.wwmm.easyeffects.service".source =
-      dotfiles/dbus-services/com.github.wwmm.easyeffects.service;
+    ".local/share/dbus-1/services/io.gitlab.news_flash.NewsFlash.service".source =
+      dotfiles/dbus-services/io.gitlab.news_flash.NewsFlash.service;
     ".local/share/dbus-1/services/io.github.celluloid_player.Celluloid.service".source =
       dotfiles/dbus-services/io.github.celluloid_player.Celluloid.service;
     ".local/share/dbus-1/services/org.gnome.seahorse.Application.service".source =
       dotfiles/dbus-services/org.gnome.seahorse.Application.service;
-    ".local/share/dbus-1/services/re.sonny.Tangram.service".source =
-      dotfiles/dbus-services/re.sonny.Tangram.service;
   };
 
   xdg.configFile = {
     # "gtk-4.0/assets".source = "${pkgs.orchis-theme}/share/themes/Orchis-Light-Compact/gtk-4.0/assets";
     # "gtk-4.0/gtk.css".source = "${pkgs.orchis-theme}/share/themes/Orchis-Light-Compact/gtk-4.0/gtk.css";
+    "autostart/login-sound.desktop".source = dotfiles/autostart/login-sound.desktop;
     "docker/config.json".source = dotfiles/docker-config.json;
     "wezterm/wezterm.lua".source =
-      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/nix-config/dotfiles/wezterm.lua";
+      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/nix-config/dotfiles/terminal/wezterm.lua";
+    "starship.toml".source =
+      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/nix-config/dotfiles/terminal/starship.toml";
   };
 
   # Let Home Manager install and manage itself.
