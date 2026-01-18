@@ -1,0 +1,16 @@
+[/]
+button-padding=6
+custom-menu-button-icon-size=20.0
+custom-menu-button-text='Apps'
+distro-icon=2
+force-menu-location='MonitorCentered'
+menu-button-border-radius=(true, 4)
+menu-button-border-width=(true, 1)
+menu-button-icon='Distro_Icon'
+menu-layout='Elementary'
+position-in-panel='Center'
+prefs-visible-page=0
+recently-installed-apps=['org.ferdium.Ferdium.desktop']
+search-entry-border-radius=(true, 25)
+show-activities-button=true
+update-notifier-project-version=65
