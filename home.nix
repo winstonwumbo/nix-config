@@ -231,29 +231,29 @@
     # Sets default terminal for Gnome .desktop shortcuts
     # See: https://github.com/ublue-os/main/issues/211#issuecomment-1551600704
     # Also see: https://discussion.fedoraproject.org/t/fedora-terminal-and-alternatives/106438
-    ".local/bin/xdg-terminal-exec".source = dotfiles/terminal/xdg-terminal-exec;
+    ".local/bin/xdg-terminal-exec".source = dotfiles/managed/terminal/xdg-terminal-exec;
 
     ".local/share/dbus-1/services/ca.desrt.dconf-editor.service".source =
-      dotfiles/dbus-services/ca.desrt.dconf-editor.service;
+      dotfiles/managed/dbus-services/ca.desrt.dconf-editor.service;
     ".local/share/dbus-1/services/com.github.neithern.g4music.service".source =
-      dotfiles/dbus-services/com.github.neithern.g4music.service;
+      dotfiles/managed/dbus-services/com.github.neithern.g4music.service;
     ".local/share/dbus-1/services/io.gitlab.news_flash.NewsFlash.service".source =
-      dotfiles/dbus-services/io.gitlab.news_flash.NewsFlash.service;
+      dotfiles/managed/dbus-services/io.gitlab.news_flash.NewsFlash.service;
     ".local/share/dbus-1/services/io.github.celluloid_player.Celluloid.service".source =
-      dotfiles/dbus-services/io.github.celluloid_player.Celluloid.service;
+      dotfiles/managed/dbus-services/io.github.celluloid_player.Celluloid.service;
     ".local/share/dbus-1/services/org.gnome.seahorse.Application.service".source =
-      dotfiles/dbus-services/org.gnome.seahorse.Application.service;
+      dotfiles/managed/dbus-services/org.gnome.seahorse.Application.service;
   };
 
   xdg.configFile = {
     # "gtk-4.0/assets".source = "${pkgs.orchis-theme}/share/themes/Orchis-Light-Compact/gtk-4.0/assets";
     # "gtk-4.0/gtk.css".source = "${pkgs.orchis-theme}/share/themes/Orchis-Light-Compact/gtk-4.0/gtk.css";
-    "autostart/login-sound.desktop".source = dotfiles/autostart/login-sound.desktop;
-    "docker/config.json".source = dotfiles/docker-config.json;
+    "autostart/login-sound.desktop".source = dotfiles/managed/autostart/login-sound.desktop;
+    "docker/config.json".source = dotfiles/managed/terminal/docker-config.json;
     "wezterm/wezterm.lua".source =
-      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/nix-config/dotfiles/terminal/wezterm.lua";
+      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/nix-config/dotfiles/managed/terminal/wezterm.lua";
     "starship.toml".source =
-      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/nix-config/dotfiles/terminal/starship.toml";
+      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/nix-config/dotfiles/managed/terminal/starship.toml";
   };
 
   # Let Home Manager install and manage itself.
