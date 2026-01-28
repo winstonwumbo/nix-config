@@ -1,5 +1,0 @@
-{
-  "cliPluginsExtraDirs": [
-    "/var/home/ruyu/.nix-profile/libexec/docker/cli-plugins/"
-  ]
-}
