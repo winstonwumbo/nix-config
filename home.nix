@@ -2,7 +2,6 @@
   lib,
   config,
   pkgs,
-  pkgs-stable,
   nixgl,
   ...
 }:
@@ -45,8 +44,7 @@
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
-  home.packages =
-    (with pkgs; [
+  home.packages = with pkgs; [
       # Gnome shell theme
       (pkgs.marble-shell-theme.override {
         colors = [ "blue" ];
@@ -74,55 +72,9 @@
       gnomeExtensions.appindicator
       # Maintained by Gnome
       #     gnomeExtensions.auto-move-windows
-      # Nice workflow stuff
       # gtk-engine-murrine
       # sassc
-
-      # Terminal tools
-      (config.lib.nixGL.wrap wezterm)
-      smartmontools
-      rclone
-      ncdu
-      yt-dlp
-      wgcf
-      unimatrix
-      fzf
-      xorg.xlsclients
-      p7zip
-
-      # Dev tools
-      jetbrains-toolbox
-      gh
-      mise
-      yarn
-      gcc
-      gdb
-      cppcheck
-      sqlite
-      turso-cli
-      (config.lib.nixGL.wrap warp-terminal)
-      
-      # Sec tools
-      ghidra
-      nmap
-      detect-it-easy
-      zap
-      (config.lib.nixGL.wrap burpsuite)
-
-      # Container tools
-      flatpak-builder
-      appstream
-      docker-compose
-      kubectl
-      kind
-      nixd
-      nil
-      nixfmt
-    ])
-    ++ (with pkgs-stable; [
-      # Packages that break with nightly
-      vagrant
-    ]);
+    ];
 
   # Fish shell configuration
   programs.fish = {
@@ -132,6 +84,7 @@
       nix-upgrade = "home-manager switch";
       nix-edit = "code ${config.home.homeDirectory}/.config/nix-config";
       nix-autoclean = "nix-collect-garbage --delete-older-than 14d";
+      frun = "flatpak run";
       ssmartctl = "sudo ${config.home.homeDirectory}/.nix-profile/bin/smartctl";
       sncdu = "sudo ${config.home.homeDirectory}/.nix-profile/bin/ncdu";
       snmap = "sudo ${config.home.homeDirectory}/.nix-profile/bin/nmap";
@@ -147,9 +100,6 @@
 
   # If you don't want to manage your shell
   # through Home Manager then you have to manually source 'hm-session-vars.sh'
-  # located at either
-  #
-  #  ~/.nix-profile/etc/profile.d/hm-session-vars.sh
   home.sessionVariables = {
     # EDITOR = "emacs";
     DOCKER_CONFIG = "${config.home.homeDirectory}/.config/docker";
@@ -212,6 +162,33 @@
 
     "org/gnome/shell/extensions/user-theme" = {
       name = "Marble-gnomeblue-dark";
+    };
+
+    "org/gnome/desktop/wm/keybindings" = {
+      close = [
+        "<Alt>F4" 
+        "<Super>q"
+      ];
+    };
+
+    "org/gnome/settings-daemon/plugins/media-keys" = {
+      www = [ "<Super>b" ];
+      # Leading slashs are absolutely necessary for custom-keybinds, Gnome crashes otherwise
+      custom-keybindings = [
+        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
+        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/"
+      ];
+    };
+    # Can't nest - dconf is weird with a relocatable schema thing for custom keybinds
+    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
+      name = "Open Terminal";
+      command = "wezterm start --cwd .";
+      binding = "<Super>t";
+    };
+    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1" = {
+      name = "Open Nautilus/File Explorer";
+      command = "nautilus";
+      binding = "<Super>e";
     };
   };
 
