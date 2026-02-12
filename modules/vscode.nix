@@ -33,11 +33,11 @@
             github.copilot
             github.copilot-chat
             github.vscode-github-actions
-            # ms-toolsai.jupyter
-            # ms-toolsai.jupyter-keymap
-            # ms-toolsai.jupyter-renderers
-            # ms-toolsai.vscode-jupyter-cell-tags
-            # ms-toolsai.vscode-jupyter-slideshow
+            ms-toolsai.jupyter
+            ms-toolsai.jupyter-keymap
+            ms-toolsai.jupyter-renderers
+            ms-toolsai.vscode-jupyter-cell-tags
+            ms-toolsai.vscode-jupyter-slideshow
           ]);
 
         userSettings = {
@@ -48,6 +48,7 @@
           "terminal.integrated.fontSize" = 15;
           "window.titleBarStyle" = "custom";
           "workbench.sideBar.location" = "left";
+          "git.autofetch" = true;
 
           # "terminal.integrated.fontFamily" = "'JetBrainsMono Nerd Font Mono', 'monospace', monospace";
           "terminal.integrated.enableImages" = true;
@@ -55,7 +56,23 @@
           # Language configs
           "terminal.integrated.defaultProfile.linux" = "fish";
           "nix.enableLanguageServer" = true;
+
           "nix.serverPath" = "nil";
+          # "nix.serverSettings" = {
+          #   "nixd" = {
+          #     "nixpkgs" = {
+          #       "expr" = "import (builtins.getFlake \"/var/home/ruyu/.config/nix-config\").inputs.nixpkgs { }";
+          #     };
+          #     "formatting" = {
+          #       "command" = [ "nixfmt" ];
+          #     };
+          #     "options" = {
+          #       "home-manager" = {
+          #         "expr" = "(builtins.getFlake \"/var/home/ruyu/.config/nix-config\").homeConfigurations.ruyu.options";
+          #       };
+          #     };
+          #   };
+          # };
           "nix.serverSettings" = {
             "nil" = {
               "formatting" = {
@@ -63,21 +80,6 @@
               };
             };
           };
-          # "nix.serverSettings" = {
-          #   "nixd" = {
-          #     "nixpkgs" = {
-          #       "expr" = "import (builtins.getFlake (builtins.toString ${config.home.homeDirectory}/.config/nix-config)).inputs.nixpkgs { }   ";
-          #     };
-          #     "formatting" = {
-          #       "command" = [ "nixfmt" ];
-          #     };
-          #     "options" = {
-          #       "home-manager" = {
-          #         "expr" = "(builtins.getFlake (builtins.toString ${config.home.homeDirectory}/.config/nix-config)).homeConfigurations.ruyu.options";
-          #       };
-          #     };
-          #   };
-          # };
 
           "julia.executablePath" =
             "${config.home.homeDirectory}/.local/share/mise/installs/julia/latest/bin/julia";
@@ -99,8 +101,16 @@
           "github.copilot.renameSuggestions.triggerAutomatically" = false;
           "chat.agent.enabled" = false;
           "chat.edits2.enabled" = false;
-          "chat.mcp.enabled" = false;
-          "chat.mcp.discovery.enabled" = false;
+          "chat.agentSessionsViewLocation" = "disabled";
+          "chat.mcp.access" = "none";
+          "chat.mcp.gallery.enabled" = false;
+          "chat.mcp.discovery.enabled" = {
+            "claude-desktop" = false;
+            "windsurf" = false;
+            "cursor-global" = false;
+            "cursor-workspace" = false;
+          };
+
           "inlineChat.holdToSpeech" = false;
           "workbench.settings.showAISearchToggle" = false;
         };

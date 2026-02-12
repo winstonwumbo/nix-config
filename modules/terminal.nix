@@ -11,6 +11,7 @@
     wgcf
     unimatrix
     fzf
+    # Check active x11 sessions
     xlsclients
     p7zip
   ];
@@ -126,61 +127,10 @@
     startupNotify = false;
   };
 
-  programs.nvf = {
-    enable = true;
-    settings = {
-      vim = {
-        theme = {
-          enable = true;
-          name = "tokyonight";
-          style = "moon";
-        };
-
-        dashboard.alpha = {
-          enable = true;
-          theme = "dashboard";
-          # opts = {
-          #   section.header.val = [
-          #       "                                                     "
-          #       "  ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗ "
-          #       "  ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║ "
-          #       "  ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║ "
-          #       "  ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║ "
-          #       "  ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║ "
-          #       "  ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝ "
-          #       "                                                     "
-          #   ];
-          # };
-        };
-
-        mini = {
-          files.enable = true;
-          completion.enable = true;
-          snippets.enable = true;
-        };
-
-        statusline.lualine = {
-          enable = true;
-        };
-
-        options.tabstop = 4;
-
-        lsp.enable = true;
-        languages = {
-          enableTreesitter = true;
-
-          nix.enable = true;
-        };
-      };
-    };
-  };
-
-  programs.opencode = {
-    enable = true;
-    settings = {
-      theme = "system";
-      share = "disabled";
-      default_agent = "plan";
-    };
+  xdg.configFile = {
+    "wezterm/wezterm.lua".source =
+      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/nix-config/dotfiles/managed/terminal/wezterm.lua";
+    "starship.toml".source =
+      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/nix-config/dotfiles/managed/terminal/starship.toml";
   };
 }

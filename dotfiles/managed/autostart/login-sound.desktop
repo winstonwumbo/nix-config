@@ -1,6 +1,5 @@
 [Desktop Entry]
-Encoding=UTF-8
-Exec=paplay $HOME/.config/nix-config/dotfiles/autostart/winxp.mp3
+Exec=pw-play $HOME/.config/nix-config/dotfiles/managed/autostart/winxp.mp3
 Name=Login Sound
 Comment=Play a sound at login
 Terminal=false

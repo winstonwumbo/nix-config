@@ -14,9 +14,10 @@
     # Or modules exported from other flakes (such as nix-colors):
     # inputs.nix-colors.homeManagerModules.default
 
-    # You can also split up your configuration and import pieces of it here:
-    # ./nvim.nix
+    # You can split up your configuration and import pieces of it here:
+    ./modules/devtools.nix
     ./modules/flatpak.nix
+    ./modules/nvim.nix
     ./modules/terminal.nix
     ./modules/vscode.nix
   ];
@@ -31,7 +32,7 @@
   # If you do want to update the value, then make sure to first check the release notes.
   home.stateVersion = "25.05"; # Please read the comment before changing.
 
-  targets.genericLinux = { 
+  targets.genericLinux = {
     enable = true;
     nixGL = {
       packages = nixgl.packages;
@@ -42,76 +43,38 @@
 
   fonts.fontconfig.enable = true;
 
-  # The home.packages option allows you to install Nix packages into your
-  # environment.
+  # The home.packages option allows you to install Nix packages
   home.packages = with pkgs; [
-      # Gnome shell theme
-      (pkgs.marble-shell-theme.override {
-        colors = [ "blue" ];
-        additionalInstallationTweaks = [
-          "-Pnp"
-          "--hue=220"
-          "--name=gnomeblue"
-          "--mode=dark"
-          "--filled"
-          "-O"
-          "--sat=80"
-        ];
-      })
+    # Gnome shell theme
+    (pkgs.marble-shell-theme.override {
+      colors = [ "blue" ];
+      additionalInstallationTweaks = [
+        "-Pnp"
+        "--hue=220"
+        "--name=gnomeblue"
+        "--mode=dark"
+        "--filled"
+        "-O"
+        "--sat=80"
+      ];
+    })
 
-      nerd-fonts.jetbrains-mono
-      gnome-tweaks
+    nerd-fonts.jetbrains-mono
+    gnome-tweaks
 
-      # Gnome extensions
-      gnomeExtensions.user-themes
-      gnomeExtensions.dash-to-panel
-      gnomeExtensions.arcmenu
-      gnomeExtensions.rounded-window-corners-reborn
-      gnomeExtensions.caffeine
-      # Maintained by Ubuntu
-      gnomeExtensions.appindicator
-      # Maintained by Gnome
-      #     gnomeExtensions.auto-move-windows
-      # gtk-engine-murrine
-      # sassc
-    ];
-
-  # Fish shell configuration
-  programs.fish = {
-    enable = true;
-    shellAliases = {
-      nix-update = "cd ${config.home.homeDirectory}/.config/nix-config && nix flake update && cd -";
-      nix-upgrade = "home-manager switch";
-      nix-edit = "code ${config.home.homeDirectory}/.config/nix-config";
-      nix-autoclean = "nix-collect-garbage --delete-older-than 14d";
-      frun = "flatpak run";
-      ssmartctl = "sudo ${config.home.homeDirectory}/.nix-profile/bin/smartctl";
-      sncdu = "sudo ${config.home.homeDirectory}/.nix-profile/bin/ncdu";
-      snmap = "sudo ${config.home.homeDirectory}/.nix-profile/bin/nmap";
-    };
-    shellInit = ''
-      set fish_greeting # Disable greeting
-
-      mise activate fish | source
-
-      fish_add_path --global ${config.home.homeDirectory}/.yarn/bin
-    '';
-  };
-
-  # If you don't want to manage your shell
-  # through Home Manager then you have to manually source 'hm-session-vars.sh'
-  home.sessionVariables = {
-    # EDITOR = "emacs";
-    DOCKER_CONFIG = "${config.home.homeDirectory}/.config/docker";
-    NIXOS_OZONE_WL = "1";
-    SSH_AUTH_SOCK = "${config.home.homeDirectory}/.var/app/com.bitwarden.desktop/data/.bitwarden-ssh-agent.sock";
-  };
-
-  # # It is sometimes useful to fine-tune packages, for example, by applying
-  # # overrides. You can do that directly here, just don't forget the
-  # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
-  # # fonts?
-  # (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
+    # Gnome extensions
+    gnomeExtensions.user-themes
+    gnomeExtensions.dash-to-panel
+    gnomeExtensions.arcmenu
+    gnomeExtensions.rounded-window-corners-reborn
+    gnomeExtensions.caffeine
+    # Maintained by Ubuntu
+    gnomeExtensions.appindicator
+    # Maintained by Gnome
+    #     gnomeExtensions.auto-move-windows
+    # gtk-engine-murrine
+    # sassc
+  ];
 
   # # You can also create simple shell scripts directly inside your
   # # configuration. For example, this adds a command 'my-hello' to your
@@ -120,7 +83,7 @@
   #   echo "Hello, ${config.home.username}!"
   # '')
 
-  # Gnome theme and settings 
+  # Gnome theme and settings
   gtk = {
     enable = true;
 
@@ -134,7 +97,7 @@
     #   });
     # };
 
-  theme = {
+    theme = {
       name = "adw-gtk3";
       package = pkgs.adw-gtk3;
     };
@@ -166,7 +129,7 @@
 
     "org/gnome/desktop/wm/keybindings" = {
       close = [
-        "<Alt>F4" 
+        "<Alt>F4"
         "<Super>q"
       ];
     };
@@ -192,12 +155,40 @@
     };
   };
 
-  # My symlinks
-  # Home Manager is pretty good at managing dotfiles. The primary way to manage
-  # plain files is through 'home.file'.
+  # Fish shell configuration
+  programs.fish = {
+    enable = true;
+    shellAliases = {
+      nix-update = "cd ${config.home.homeDirectory}/.config/nix-config && nix flake update && cd -";
+      nix-upgrade = "home-manager switch";
+      nix-edit = "code ${config.home.homeDirectory}/.config/nix-config";
+      nix-autoclean = "nix-collect-garbage --delete-older-than 14d";
+      frun = "flatpak run";
+      ssmartctl = "sudo ${config.home.homeDirectory}/.nix-profile/bin/smartctl";
+      sncdu = "sudo ${config.home.homeDirectory}/.nix-profile/bin/ncdu";
+      snmap = "sudo ${config.home.homeDirectory}/.nix-profile/bin/nmap";
+    };
+    shellInit = ''
+      set fish_greeting # Disable greeting
+
+      mise activate fish | source
+
+      fish_add_path --global ${config.home.homeDirectory}/.yarn/bin
+    '';
+  };
+
+  # If you don't want to manage your shell through Home Manager
+  # then you have to manually source 'hm-session-vars.sh'
+  home.sessionVariables = {
+    # EDITOR = "emacs";
+    DOCKER_CONFIG = "${config.home.homeDirectory}/.config/docker";
+    NIXOS_OZONE_WL = "1";
+    SSH_AUTH_SOCK = "${config.home.homeDirectory}/.var/app/com.bitwarden.desktop/data/.bitwarden-ssh-agent.sock";
+  };
+
+  # My symlinks: the primary way to manage plain files is through 'home.file'.
+  # Building this configuration will create a copy of 'dotfiles/blank' in the Nix store.
   home.file = {
-    # # Building this configuration will create a copy of 'dotfiles/blank' in
-    # # the Nix store.
     ".local/share/icons/Numix".source = "${pkgs.numix-icon-theme-circle}/share/icons/Numix";
     ".local/share/icons/Numix-Light".source = "${pkgs.numix-icon-theme-circle}/share/icons/Numix-Light";
     ".local/share/icons/Numix-Circle".source =
@@ -222,15 +213,12 @@
       dotfiles/managed/dbus-services/org.gnome.seahorse.Application.service;
   };
 
+  # Makes writing dotfiles to ~/.config that little bit shorter
   xdg.configFile = {
     # "gtk-4.0/assets".source = "${pkgs.orchis-theme}/share/themes/Orchis-Light-Compact/gtk-4.0/assets";
     # "gtk-4.0/gtk.css".source = "${pkgs.orchis-theme}/share/themes/Orchis-Light-Compact/gtk-4.0/gtk.css";
     "autostart/login-sound.desktop".source = dotfiles/managed/autostart/login-sound.desktop;
     "docker/config.json".source = dotfiles/managed/terminal/docker-config.json;
-    "wezterm/wezterm.lua".source =
-      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/nix-config/dotfiles/managed/terminal/wezterm.lua";
-    "starship.toml".source =
-      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/nix-config/dotfiles/managed/terminal/starship.toml";
   };
 
   # Let Home Manager install and manage itself.
