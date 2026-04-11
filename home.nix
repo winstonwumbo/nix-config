@@ -5,7 +5,13 @@
   nixgl,
   ...
 }:
-
+let 
+  gtkTheme = "Qogir-Dark";
+  gtkThemePkg = (pkgs.qogir-theme.override {
+    themeVariants = [ "default" ];
+    colorVariants = [ "dark" ];
+  });
+in
 {
   imports = [
     # If you want to use modules your own flake exports (from modules/home-manager):
@@ -66,7 +72,6 @@
     gnomeExtensions.user-themes
     gnomeExtensions.dash-to-panel
     gnomeExtensions.arcmenu
-    gnomeExtensions.rounded-window-corners-reborn
     gnomeExtensions.caffeine
     # Maintained by Ubuntu
     gnomeExtensions.appindicator
@@ -87,25 +92,18 @@
   gtk = {
     enable = true;
 
-    # theme = {
-    #   name = "Graphite-blue-compact-nord";
-    #   package = (pkgs.graphite-gtk-theme.override {
-    #     themeVariants = [ "blue" ];
-    #     colorVariants = [ "standard" ];
-    #     sizeVariants = [ "compact" ];
-    #     tweaks = [ "normal" "nord"];
-    #   });
-    # };
-
     theme = {
-      name = "adw-gtk3";
-      package = pkgs.adw-gtk3;
+      name = gtkTheme;
+      package = gtkThemePkg;
     };
 
     iconTheme = {
       name = "Numix-Circle";
       package = pkgs.numix-icon-theme-circle;
     };
+
+    # GTK3 theme is no longer mirrored to GTK4 with home-manager 26.05
+    gtk4.theme = config.gtk.theme;
   };
 
   dconf.settings = {
@@ -117,7 +115,6 @@
         "user-theme@gnome-shell-extensions.gcampax.github.com"
         "arcmenu@arcmenu.com"
         "dash-to-panel@jderose9.github.com"
-        "rounded-window-corners@fxgn"
         "caffeine@patapon.info"
         "appindicatorsupport@rgcjonas.gmail.com"
       ];
@@ -155,37 +152,6 @@
     };
   };
 
-  # Fish shell configuration
-  programs.fish = {
-    enable = true;
-    shellAliases = {
-      nix-update = "cd ${config.home.homeDirectory}/.config/nix-config && nix flake update && cd -";
-      nix-upgrade = "home-manager switch";
-      nix-edit = "code ${config.home.homeDirectory}/.config/nix-config";
-      nix-autoclean = "nix-collect-garbage --delete-older-than 14d";
-      frun = "flatpak run";
-      ssmartctl = "sudo ${config.home.homeDirectory}/.nix-profile/bin/smartctl";
-      sncdu = "sudo ${config.home.homeDirectory}/.nix-profile/bin/ncdu";
-      snmap = "sudo ${config.home.homeDirectory}/.nix-profile/bin/nmap";
-    };
-    shellInit = ''
-      set fish_greeting # Disable greeting
-
-      mise activate fish | source
-
-      fish_add_path --global ${config.home.homeDirectory}/.yarn/bin
-    '';
-  };
-
-  # If you don't want to manage your shell through Home Manager
-  # then you have to manually source 'hm-session-vars.sh'
-  home.sessionVariables = {
-    # EDITOR = "emacs";
-    DOCKER_CONFIG = "${config.home.homeDirectory}/.config/docker";
-    NIXOS_OZONE_WL = "1";
-    SSH_AUTH_SOCK = "${config.home.homeDirectory}/.var/app/com.bitwarden.desktop/data/.bitwarden-ssh-agent.sock";
-  };
-
   # My symlinks: the primary way to manage plain files is through 'home.file'.
   # Building this configuration will create a copy of 'dotfiles/blank' in the Nix store.
   home.file = {
@@ -195,31 +161,37 @@
       "${pkgs.numix-icon-theme-circle}/share/icons/Numix-Circle";
     ".local/share/icons/Numix-Circle-Light".source =
       "${pkgs.numix-icon-theme-circle}/share/icons/Numix-Circle-Light";
+    ".local/share/themes/${gtkTheme}".source = "${gtkThemePkg}/share/themes/${gtkTheme}"; 
 
-    # Sets default terminal for Gnome .desktop shortcuts
+    # Sets default terminal for .desktop shortcuts on Gnome
     # See: https://github.com/ublue-os/main/issues/211#issuecomment-1551600704
     # Also see: https://discussion.fedoraproject.org/t/fedora-terminal-and-alternatives/106438
     ".local/bin/xdg-terminal-exec".source = dotfiles/managed/terminal/xdg-terminal-exec;
-
-    ".local/share/dbus-1/services/ca.desrt.dconf-editor.service".source =
-      dotfiles/managed/dbus-services/ca.desrt.dconf-editor.service;
-    ".local/share/dbus-1/services/com.github.neithern.g4music.service".source =
-      dotfiles/managed/dbus-services/com.github.neithern.g4music.service;
-    ".local/share/dbus-1/services/io.gitlab.news_flash.NewsFlash.service".source =
-      dotfiles/managed/dbus-services/io.gitlab.news_flash.NewsFlash.service;
-    ".local/share/dbus-1/services/io.github.celluloid_player.Celluloid.service".source =
-      dotfiles/managed/dbus-services/io.github.celluloid_player.Celluloid.service;
-    ".local/share/dbus-1/services/org.gnome.seahorse.Application.service".source =
-      dotfiles/managed/dbus-services/org.gnome.seahorse.Application.service;
   };
 
   # Makes writing dotfiles to ~/.config that little bit shorter
   xdg.configFile = {
-    # "gtk-4.0/assets".source = "${pkgs.orchis-theme}/share/themes/Orchis-Light-Compact/gtk-4.0/assets";
-    # "gtk-4.0/gtk.css".source = "${pkgs.orchis-theme}/share/themes/Orchis-Light-Compact/gtk-4.0/gtk.css";
     "autostart/login-sound.desktop".source = dotfiles/managed/autostart/login-sound.desktop;
-    "docker/config.json".source = dotfiles/managed/terminal/docker-config.json;
   };
+
+  home.activation.mirrorDesktopEntries = lib.hm.dag.entryAfter ["installPackages"] ''
+    if [ "$XDG_CURRENT_DESKTOP" = "GNOME" ]; then
+
+      if [ ! -d "${config.home.homeDirectory}/.local/share/applications" ]; then
+        mkdir "${config.home.homeDirectory}/.local/share/applications"
+      fi
+
+      # Remove broken symlinks from previous runs
+      find "${config.home.homeDirectory}/.local/share/applications" \
+        -maxdepth 1 -name "*.desktop" -xtype l -delete
+
+      # Symlink each .desktop file individually
+      for file in "${config.home.homeDirectory}/.nix-profile/share/applications"/*.desktop; do
+        ln -sf "$file" "${config.home.homeDirectory}/.local/share/applications/$(basename "$file")"
+      done
+
+    fi
+  '';
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
