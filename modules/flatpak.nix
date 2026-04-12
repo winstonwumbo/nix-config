@@ -20,6 +20,9 @@
       "org.gnome.seahorse.Application"
       "io.github.flattool.Warehouse"
       "com.github.wwmm.easyeffects"
+      "dev.serebit.Waycheck"
+      "io.missioncenter.MissionCenter"
+      "net.nokyan.Resources"
       # Media
       "io.github.celluloid_player.Celluloid"
       "com.github.neithern.g4music"
@@ -29,6 +32,7 @@
       "com.github.johnfactotum.Foliate" # Ebooks
       "com.github.PintaProject.Pinta"
       "io.github.josephmawa.Bella"
+      "com.github.tenderowl.frog"
       "com.obsproject.Studio"
       "org.kde.kdenlive"
       # Productivity
@@ -38,7 +42,8 @@
       "org.gnome.Evolution"
       "com.github.jeromerobert.pdfarranger"
       # Devtools
-      # "io.podman_desktop.PodmanDesktop"
+      "org.virt_manager.virt-manager" # Manually select QEMU/System session after install
+      "io.podman_desktop.PodmanDesktop"
       # Sectools
       "com.bitwarden.desktop"
       "com.yubico.yubioath"
@@ -54,7 +59,13 @@
         Context = {
           filesystems = [
             "/nix/store:ro"
+            "xdg-data/themes:ro"
+            "xdg-config/gtk-3.0:ro"
+            "xdg-config/gtk-4.0:ro"
           ];
+        };
+        Environment = {
+          GTK_THEME = "Qogir-Dark";
         };
       };
 
