@@ -19,6 +19,30 @@ EOL
   fi
 fi
 
+if ! command -v nix &> /dev/null; then
+  echo "Nix is not installed"
+  while true; do
+    read -rp "Install Determinate Nix? [y/n]: " confirm
+    confirm_lowercase=$(echo "$confirm" | tr '[:upper:]' '[:lower:]')
+    if [ "$confirm_lowercase" = "y" ] || [ "$confirm_lowercase" = "yes" ]; then
+      curl -fsSL https://install.determinate.systems/nix | sh -s -- install
+      break
+    elif [ "$confirm_lowercase" = "n" ] || [ "$confirm_lowercase" = "no" ]; then
+      echo "A working installation of the Nix package manager is required"
+      return
+    else
+      echo "Please enter yes or no."
+    fi
+  done
+fi
+
+. /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+
+# HM manages Bash
+mv $HOME/.bashrc $HOME/.bashrc.bak
+mv $HOME/.profile $HOME/.profile.bak
+mv $HOME/.bash_profile $HOME/.bash_profile.bak
+
 # Initialize home-manager flake
 nix run home-manager/master -- init --switch
 
@@ -27,5 +51,7 @@ cd "$HOME"/.config || return
 
 # Remove home-manager presets
 rm -r home-manager/
+
+git clone https://github.com/winstonwumbo/nix-config.git
 
 home-manager switch --flake "$HOME"/.config/nix-config/
