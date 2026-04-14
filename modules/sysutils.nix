@@ -1,19 +1,91 @@
 { config, pkgs, ... }:
 {
   home.packages = with pkgs; [
-    smartmontools
-    ncdu
-    rclone
-    
-    yt-dlp
-    wgcf
-    unimatrix
-    # Check active x11 sessions
-    xlsclients
-    p7zip
-    nvtopPackages.intel
+    smartmontools # disk health
+    ncdu # disk usage
+    rclone # cloud storage
+    nvtopPackages.intel # gpu status
+    xlsclients # Check active x11 sessions
+    wgcf # cloudflare vpn profile
+    p7zip # 7-zip
+
+    yt-dlp # youtube downloader
+    unimatrix # the matrix
   ];
 
+  home.shellAliases = {
+    restart-xdg-filepicker = "systemctl --user restart xdg-desktop-portal.service";
+    ssmartctl = "sudo ${config.home.homeDirectory}/.nix-profile/bin/smartctl";
+    sncdu = "sudo ${config.home.homeDirectory}/.nix-profile/bin/ncdu";
+  };
+
+  services.flatpak.packages = [
+    "com.bitwarden.desktop"
+    "com.github.tchx84.Flatseal"
+    "ca.desrt.dconf-editor"
+    "org.gnome.seahorse.Application"
+    "io.github.flattool.Warehouse"
+    "com.github.wwmm.easyeffects"
+    "dev.serebit.Waycheck"
+    "io.missioncenter.MissionCenter"
+    "net.nokyan.Resources"
+  ];
+
+  # System info
+  programs.fastfetch = {
+    enable = true;
+    settings = {
+      logo = {
+        source = "${config.home.homeDirectory}/Pictures/luce-bankai.jpeg";
+        type = "sixel";
+        padding = {
+          right = 6;
+        };
+        width = 30;
+        height = 18;
+      };
+      display = {
+        color = "cyan";
+      };
+      modules = [
+        "title"
+        "break"
+        {
+          type = "os";
+          format = "{name} {version-id} [{variant} {arch}]";
+        }
+        "host"
+        "uptime"
+        {
+          type = "packages";
+          format = "{rpm} (rpm), {nix-user} (nix-user), {flatpak-all} (flatpak)";
+        }
+        "de"
+        "wm"
+        {
+          type = "theme";
+          format = "Marble [Shell], Graphite Nord [GTK2/3/4]";
+        }
+        "icons"
+        {
+          type = "font";
+          format = "Helvetica Standard (Liberation Sans...)";
+        }
+        {
+          type = "terminal";
+          format = "{pretty-name} ({version})";
+        }
+        "cpu"
+        "memory"
+        "disk"
+        "localip"
+        "break"
+        "colors"
+      ];
+    };
+  };
+
+  # System status
   programs.bottom = {
     enable = true;
     settings = {

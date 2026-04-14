@@ -8,7 +8,8 @@
   home.packages =
     (with pkgs; [
       # programming
-      jetbrains-toolbox
+      jetbrains.clion
+      jetbrains.datagrip
       gh
       mise
       yarn
@@ -18,23 +19,23 @@
       sqlite
       turso-cli
 
+      shellcheck
+
       # infra
       terraform
       terraform-ls
+      awscli2
+      azure-cli
+      google-cloud-sdk
+      oci-cli
 
       # containers
       flatpak-builder
       appstream
       docker-compose
+      ddev
       kubectl
       kind
-
-      # security
-      nmap
-      zap
-      (config.lib.nixGL.wrap burpsuite)
-      ghidra
-      detect-it-easy
 
       # nix
       nixd
@@ -46,12 +47,16 @@
       vagrant
     ]);
 
-  programs.opencode = {
-    enable = true;
-    settings = {
-      theme = "system";
-      share = "disabled";
-      default_agent = "plan";
-    };
+  home.sessionVariables = {
+    DOCKER_CONFIG = "${config.home.homeDirectory}/.config/docker";
   };
+
+  xdg.configFile = {
+    "docker/config.json".source = ../dotfiles/managed/terminal/docker-config.json;
+  };
+
+  services.flatpak.packages = [
+    "org.virt_manager.virt-manager" # Manually select QEMU/System session after install
+    "io.podman_desktop.PodmanDesktop"
+  ];
 }

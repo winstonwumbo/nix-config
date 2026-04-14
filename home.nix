@@ -21,8 +21,8 @@ in
     # inputs.nix-colors.homeManagerModules.default
 
     # You can split up your configuration and import pieces of it here:
+    ./modules/apps.nix
     ./modules/devtools.nix
-    ./modules/flatpak.nix
     ./modules/nvim.nix
     ./modules/sysutils.nix
     ./modules/terminal.nix
@@ -37,6 +37,31 @@ in
       packages = nixgl.packages;
       defaultWrapper = "mesa";
       installScripts = [ "mesa" ];
+    };
+  };
+
+  services.flatpak = {
+    enable = true;
+    uninstallUnused = true;
+    update.auto = {
+      enable = true;
+      onCalendar = "weekly";
+    };
+  };
+
+  services.flatpak.overrides = {
+    global = {
+      Context = {
+        filesystems = [
+          "/nix/store:ro"
+          "xdg-data/themes:ro"
+          "xdg-config/gtk-3.0:ro"
+          "xdg-config/gtk-4.0:ro"
+        ];
+      };
+      Environment = {
+        GTK_THEME = "Qogir-Dark";
+      };
     };
   };
 
