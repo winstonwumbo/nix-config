@@ -9,6 +9,8 @@ let
     "window.titleBarStyle" = "custom";
     "workbench.activityBar.location" = "top";
     "workbench.navigationControl.enabled" = false;
+    # https://github.com/microsoft/vscode/issues/306156
+    "chat.agentsControl.enabled" = "hidden";
 
     # tooling
     "git.autofetch" = true;
