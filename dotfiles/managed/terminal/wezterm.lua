@@ -1,12 +1,13 @@
 -- Pull in the wezterm API
 local wezterm = require 'wezterm'
 local act = wezterm.action
+local mux = wezterm.mux
 
 -- This will hold the configuration.
 local config = wezterm.config_builder()
 
 -- This is where you actually apply your config choices
-config.default_prog = { '/var/home/ruyu/.nix-profile/bin/fish', '-l' }
+config.default_prog = { wezterm.home_dir .. '/.nix-profile/bin/fish', '-l' }
 config.color_scheme = 'Tokyo Night Moon'
 
 config.use_fancy_tab_bar = false
@@ -17,13 +18,7 @@ config.enable_scroll_bar = true
 config.scrollback_lines = 10000
 config.hide_mouse_cursor_when_typing = false
 config.window_close_confirmation = 'NeverPrompt'
-
--- config.window_padding = {
---   left = 2,
---   right = 2,
---   top = 2,
---   bottom = 2,
--- }
+config.warn_about_missing_glyphs = false
 
 config.mouse_bindings = {
 	{
@@ -40,6 +35,17 @@ config.mouse_bindings = {
 		end),
 	},
 }
+
+wezterm.on("gui-startup", function(cmd)
+  if cmd and cmd.args and cmd.args[1] == "--task-manager" then
+    local tab, pane, window = mux.spawn_window{ args = { "nvtop" }, }
+    pane:split {
+      direction = "Right",
+      args = { "btm" },
+    }
+	return false
+  end
+end)
 
 -- and finally, return the configuration to wezterm
 return config
