@@ -1,6 +1,6 @@
 { config, pkgs, ... }:
 {
-  # Terminal experience
+  # Module: terminal experience
   home.packages = with pkgs; [
     (config.lib.nixGL.wrap wezterm)
     starship
@@ -12,6 +12,35 @@
       config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/nix-config/dotfiles/managed/terminal/wezterm.lua";
     "starship.toml".source =
       config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/nix-config/dotfiles/managed/terminal/starship.toml";
+  };
+
+  home.file = {
+    # Sets default terminal for .desktop shortcuts on Gnome
+    # See: https://github.com/ublue-os/main/issues/211#issuecomment-1551600704
+    # Also see: https://discussion.fedoraproject.org/t/fedora-terminal-and-alternatives/106438
+    ".local/bin/xdg-terminal-exec" = {
+      text = ''
+        #!/usr/bin/env bash
+
+        wezterm start -- "$@"
+      '';
+      executable = true;
+    };
+  };
+
+  home.shellAliases = {
+    nix-update = "cd ${config.home.homeDirectory}/.config/nix-config && nix flake update && cd -";
+    nix-upgrade = "home-manager switch --flake ${config.home.homeDirectory}/.config/nix-config/";
+    nix-edit = "code ${config.home.homeDirectory}/.config/nix-config";
+    nix-autoclean = "nix-collect-garbage --delete-older-than 14d";
+    nix-oc = "opencode -c ${config.home.homeDirectory}/.config/nix-config";
+    fzf-p = "fzf --preview 'cat {}'";
+    frun = "flatpak run";
+  };
+
+  home.sessionVariables = {
+    # EDITOR = "emacs";
+    NIXOS_OZONE_WL = "1";
   };
 
   # Bash (login/scripting shell)
@@ -52,21 +81,6 @@
       set -gx SSH_AUTH_SOCK '${config.home.homeDirectory}/.var/app/com.bitwarden.desktop/data/.bitwarden-ssh-agent.sock'
       fish_add_path --global ${config.home.homeDirectory}/.yarn/bin
     '';
-  };
-
-  home.shellAliases = {
-    nix-update = "cd ${config.home.homeDirectory}/.config/nix-config && nix flake update && cd -";
-    nix-upgrade = "home-manager switch --flake ${config.home.homeDirectory}/.config/nix-config/";
-    nix-edit = "code ${config.home.homeDirectory}/.config/nix-config";
-    nix-autoclean = "nix-collect-garbage --delete-older-than 14d";
-    nix-oc = "opencode -c ${config.home.homeDirectory}/.config/nix-config";
-    fzf-p = "fzf --preview 'cat {}'";
-    frun = "flatpak run";
-  };
-
-  home.sessionVariables = {
-    # EDITOR = "emacs";
-    NIXOS_OZONE_WL = "1";
   };
 
   programs.opencode = {
