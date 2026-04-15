@@ -1,6 +1,6 @@
 { ... }:
 {
-  # Desktop applications
+  # Module: desktop applications
   services.flatpak.packages = [
     # Browsers
     "com.brave.Browser" # Blink (Chromium)
@@ -8,22 +8,23 @@
     "org.gnome.Epiphany" # Webkit (Kinda Safari)
     "org.ferdium.Ferdium" # Webapps
     # Media
-    "io.github.celluloid_player.Celluloid"
-    "com.github.neithern.g4music"
-    "org.tenacityaudio.Tenacity"
+    "io.github.celluloid_player.Celluloid" # Video Player
+    "com.github.neithern.g4music" # Music
+    "org.tenacityaudio.Tenacity" # Audio
+    "com.obsproject.Studio" # Video Recording
+    "org.kde.kdenlive" # Video Editing
+
     "io.gitlab.news_flash.NewsFlash" # RSS
     "info.febvre.Komikku" # Manga
     "com.github.johnfactotum.Foliate" # Ebooks
-    "com.github.PintaProject.Pinta"
-    "io.github.josephmawa.Bella"
-    "com.github.tenderowl.frog"
-    "com.obsproject.Studio"
-    "org.kde.kdenlive"
+    "com.github.PintaProject.Pinta" # Paint
+    "io.github.josephmawa.Bella" # Color Picker
+    "com.github.tenderowl.frog" # OCR
     # Productivity
-    "org.onlyoffice.desktopeditors"
-    "org.kde.okular"
-    "md.obsidian.Obsidian"
-    "org.gnome.Evolution"
+    "org.onlyoffice.desktopeditors" # Office
+    "org.kde.okular" # PDFs
+    "md.obsidian.Obsidian" # Notes
+    "org.gnome.Evolution" # Email
     "com.github.jeromerobert.pdfarranger"
   ];
 

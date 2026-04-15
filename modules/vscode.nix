@@ -40,6 +40,7 @@ let
   ]);
 in
 {
+  # Module: vs code config
   programs.vscode = {
     enable = true;
 

@@ -1,9 +1,6 @@
+{ config, pkgs, ... }:
 {
-  config,
-  pkgs,
-  ...
-}:
-{
+  # Module: cybersecurity applications
   home.packages = with pkgs; [
     nmap
     zap
@@ -24,7 +21,7 @@
     "org.wireshark.Wireshark"
     "io.emeric.toolblex"
   ];
-    
+
   services.flatpak.overrides = {
     "org.wireshark.Wireshark" = {
       Context = {

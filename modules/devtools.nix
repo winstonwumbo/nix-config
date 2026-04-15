@@ -5,6 +5,7 @@
   ...
 }:
 {
+  # Module: development tools
   home.packages =
     (with pkgs; [
       # programming
@@ -47,12 +48,12 @@
       vagrant
     ]);
 
-  home.sessionVariables = {
-    DOCKER_CONFIG = "${config.home.homeDirectory}/.config/docker";
-  };
-
   xdg.configFile = {
     "docker/config.json".source = ../dotfiles/managed/terminal/docker-config.json;
+  };
+  
+  home.sessionVariables = {
+    DOCKER_CONFIG = "${config.home.homeDirectory}/.config/docker";
   };
 
   services.flatpak.packages = [

@@ -1,5 +1,6 @@
 { config, pkgs, ... }:
 {
+  # Module: system utilities
   home.packages = with pkgs; [
     smartmontools # disk health
     ncdu # disk usage

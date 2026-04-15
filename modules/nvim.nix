@@ -1,5 +1,6 @@
-{ config, pkgs, ... }:
+{ ... }:
 {
+  # Module: neovim config
   programs.nvf = {
     enable = true;
     settings = {
