@@ -24,12 +24,13 @@ in
     ./modules/apps.nix
     ./modules/devtools.nix
     ./modules/nvim.nix
+    ./modules/sectools.nix
     ./modules/sysutils.nix
     ./modules/terminal.nix
     ./modules/vscode.nix
   ];
 
-  # Generic
+  # generic: global settings
   targets.genericLinux = {
     enable = true;
     # GPU wrapper for non-Nix distros
@@ -126,10 +127,12 @@ in
     gnomeExtensions.appindicator
     # Maintained by Gnome
     # gnomeExtensions.auto-move-windows
+    ffmpegthumbnailer
   ];
 
   # HM symlinks: creates a copy of 'dotfiles/blank' in the Nix store.
   home.file = {
+    # Themeing
     ".local/share/icons/Numix".source = "${pkgs.numix-icon-theme-circle}/share/icons/Numix";
     ".local/share/icons/Numix-Light".source = "${pkgs.numix-icon-theme-circle}/share/icons/Numix-Light";
     ".local/share/icons/Numix-Circle".source =
@@ -138,13 +141,28 @@ in
       "${pkgs.numix-icon-theme-circle}/share/icons/Numix-Circle-Light";
     ".local/share/themes/${gtkTheme}".source = "${gtkThemePkg}/share/themes/${gtkTheme}"; 
 
-    # Sets default terminal for .desktop shortcuts on Gnome
-    # See: https://github.com/ublue-os/main/issues/211#issuecomment-1551600704
-    # Also see: https://discussion.fedoraproject.org/t/fedora-terminal-and-alternatives/106438
-    ".local/bin/xdg-terminal-exec".source = dotfiles/managed/terminal/xdg-terminal-exec;
+    ".local/bin/bwrap" = { 
+        text = ''
+        #!/usr/bin/env bash
+        nix_args=()
+        if [[ " $* " == *" GIO_USE_VFS "* ]]; then
+            profile="$(realpath "$HOME")/.nix-profile"
+            [[ -d "$profile"   ]] && nix_args+=(--ro-bind "$profile" "$profile")
+            [[ -d /nix/store   ]] && nix_args+=(--ro-bind /nix/store /nix/store)
+        fi
+        exec /usr/bin/bwrap "''${nix_args[@]}" "$@"
+      '';
+      executable = true;
+    };
+    ".local/share/thumbnailers/totem.thumbnailer".text = ''
+      [Thumbnailer Entry]
+      TryExec=ffmpegthumbnailer
+      Exec=ffmpegthumbnailer -i %i -o %o -s %s -f
+      MimeType=video/3gpp;video/3gpp2;video/annodex;video/dv;video/isivideo;video/mj2;video/mp2t;video/mp4;video/mpeg;video/ogg;video/quicktime;video/vnd.avi;video/vnd.mpegurl;video/vnd.radgamettools.bink;video/vnd.radgamettools.smacker;video/vnd.rn-realvideo;video/vnd.vivo;video/vnd.youtube.yt;video/wavelet;video/webm;video/x-anim;video/x-flic;video/x-flv;video/x-javafx;video/x-matroska;video/x-matroska-3d;video/x-mjpeg;video/x-mng;video/x-ms-wmv;video/x-nsv;video/x-ogm+ogg;video/x-sgi-movie;video/x-theora+ogg;application/mxf;application/vnd.ms-asf;application/vnd.rn-realmedia;application/x-matroska;application/ogg;
+    '';
   };
 
-  # GTK theme and icons
+  # GTK: theme and icons
   gtk = {
     enable = true;
 
