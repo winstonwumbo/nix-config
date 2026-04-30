@@ -2,6 +2,7 @@
 {
   # Module: system utilities
   home.packages = with pkgs; [
+    fzf # fuzzy finder
     smartmontools # disk health
     ncdu # disk usage
     rclone # cloud storage
@@ -10,14 +11,21 @@
     wgcf # cloudflare vpn profile
     p7zip # 7-zip
 
-    yt-dlp # youtube downloader
+    # Figure out how to pull yt-dlp without Deno dependency?
+    # yt-dlp # youtube downloader
     unimatrix # the matrix
   ];
 
   home.shellAliases = {
-    restart-xdg-filepicker = "systemctl --user restart xdg-desktop-portal.service";
     ssmartctl = "sudo ${config.home.homeDirectory}/.nix-profile/bin/smartctl";
     sncdu = "sudo ${config.home.homeDirectory}/.nix-profile/bin/ncdu";
+    fp-run = "flatpak run";
+    fzf-p = "fzf --preview 'cat {}'";
+    upwr-status = "upower -i /org/freedesktop/UPower/devices/battery_BAT1";
+
+    # system-d
+    xdg-files-restart = "systemctl --user restart xdg-desktop-portal.service";
+    upwr-restart = "sudo systemctl restart upower";
   };
 
   services.flatpak.packages = [

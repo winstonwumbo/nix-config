@@ -9,8 +9,6 @@
   home.packages =
     (with pkgs; [
       # programming
-      jetbrains.clion
-      jetbrains.datagrip
       gh
       mise
       yarn
@@ -45,6 +43,8 @@
     ])
     ++ (with pkgs-stable; [
       # Packages that break with nightly
+      jetbrains.clion
+      jetbrains.datagrip
       vagrant
     ]);
 

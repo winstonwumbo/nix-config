@@ -4,7 +4,6 @@
   home.packages = with pkgs; [
     (config.lib.nixGL.wrap wezterm)
     starship
-    fzf
   ];
 
   xdg.configFile = {
@@ -34,8 +33,6 @@
     nix-edit = "code ${config.home.homeDirectory}/.config/nix-config";
     nix-autoclean = "nix-collect-garbage --delete-older-than 14d";
     nix-oc = "opencode -c ${config.home.homeDirectory}/.config/nix-config";
-    fzf-p = "fzf --preview 'cat {}'";
-    frun = "flatpak run";
   };
 
   home.sessionVariables = {
@@ -86,8 +83,9 @@
   programs.opencode = {
     enable = true;
     settings = {
-      share = "disabled";
+      autoupdate = false;
       default_agent = "plan";
+      share = "disabled";
     };
     tui = {
       theme = "system";

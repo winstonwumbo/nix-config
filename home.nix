@@ -20,7 +20,6 @@ in
     # Or modules exported from other flakes (such as nix-colors):
     # inputs.nix-colors.homeManagerModules.default
 
-    # You can split up your configuration and import pieces of it here:
     ./modules/apps.nix
     ./modules/devtools.nix
     ./modules/nvim.nix
@@ -115,7 +114,6 @@ in
       ];
     })
 
-    nerd-fonts.jetbrains-mono
     gnome-tweaks
 
     # Gnome extensions
@@ -127,6 +125,9 @@ in
     gnomeExtensions.appindicator
     # Maintained by Gnome
     # gnomeExtensions.auto-move-windows
+
+    # General
+    nerd-fonts.jetbrains-mono
     ffmpegthumbnailer
   ];
 
@@ -141,14 +142,15 @@ in
       "${pkgs.numix-icon-theme-circle}/share/icons/Numix-Circle-Light";
     ".local/share/themes/${gtkTheme}".source = "${gtkThemePkg}/share/themes/${gtkTheme}"; 
 
+    # Nautilus thumbnailing
     ".local/bin/bwrap" = { 
         text = ''
         #!/usr/bin/env bash
         nix_args=()
-        if [[ " $* " == *" GIO_USE_VFS "* ]]; then
+        if [[ " $* " == *" --setenv GIO_USE_VFS "* ]]; then
             profile="$(realpath "$HOME")/.nix-profile"
-            [[ -d "$profile"   ]] && nix_args+=(--ro-bind "$profile" "$profile")
-            [[ -d /nix/store   ]] && nix_args+=(--ro-bind /nix/store /nix/store)
+            [[ -d "$profile" ]] && nix_args+=(--ro-bind "$profile" "$profile")
+            [[ -d /nix/store ]] && nix_args+=(--ro-bind /nix/store /nix/store)
         fi
         exec /usr/bin/bwrap "''${nix_args[@]}" "$@"
       '';
